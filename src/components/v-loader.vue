@@ -1,5 +1,5 @@
 <template>
-	<div class="v-loader lds-facebook" v-if="isLoading">
+	<div class="v-loader lds-facebook">
 		<div></div>
 		<div></div>
 		<div></div>
@@ -8,13 +8,7 @@
 
 <script>
 export default {
-	name: 'v-loader',
-	props: {
-		isLoading: {
-			type: Boolean,
-			default: false
-		}
-	}
+	name: 'v-loader'
 };
 </script>
 

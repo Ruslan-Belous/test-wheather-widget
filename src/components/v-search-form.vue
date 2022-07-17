@@ -1,8 +1,8 @@
 <template>
 	<div class="search-box-wrapp">
 		<form class="search-box" @submit.prevent="getWheather">
-			<input type="text" placeholder="Please enter latitude ?" v-model="latitude" />
-			<input type="text" placeholder="Please enter longitude ?" v-model="longitude" />
+			<input type="text" placeholder="Please enter latitude ?" v-model.trim="coords.lat" />
+			<input type="text" placeholder="Please enter longitude ?" v-model.trim="coords.lon" />
 			<v-button
 				class="search-box__btn"
 				type="submit"
@@ -12,40 +12,40 @@
 				:prependBtnIcon="'magnifying-glass'"
 			/>
 		</form>
-		<v-loader :isLoading="isLoading" />
+		<v-loader v-if="loadingAddPlace" />
 	</div>
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import VButton from './v-button.vue';
-import vLoader from './v-loader.vue';
+import VLoader from './v-loader.vue';
 export default {
-	components: { vLoader, VButton },
+	components: { VButton, VLoader },
 	name: 'v-search-form',
 	data: () => ({
-		isLoading: false,
-		latitude: '49.2328',
-		longitude: '28.481'
+		coords: {
+			lat: '',
+			lon: ''
+		}
 	}),
 	computed: {
+		...mapState(['loadingAddPlace']),
 		canSearch() {
-			return this.latitude.trim() && this.longitude.trim();
+			return this.coords.lat && this.coords.lon;
 		}
 	},
 	methods: {
 		...mapActions(['getWeatherByLatLon']),
-		...mapMutations(['UPDATE_WEATHER', 'SET_LATITUDE', 'SET_LONGITUDE']),
+		...mapMutations(['UPDATE_WEATHER', 'SET_LATITUDE', 'SET_LONGITUDE', 'CHANGE_LOADING_ADD_PLACE']),
 		async getWheather() {
-			this.isLoading = true;
-			if (this.latitude !== '' && this.longitude !== '') {
-				this.SET_LATITUDE(this.latitude);
-				this.SET_LONGITUDE(this.longitude);
-				await this.getWeatherByLatLon();
+			if (this.coords.lat && this.coords) {
+				this.CHANGE_LOADING_ADD_PLACE(true);
+				await this.getWeatherByLatLon(this.coords);
+				this.CHANGE_LOADING_ADD_PLACE(false);
 			}
-			// this.latitude = '';
-			// this.longitude = '';
-			this.isLoading = false;
+			this.coords.lat = '';
+			this.coords.lon = '';
 		}
 	}
 };
