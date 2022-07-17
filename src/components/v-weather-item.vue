@@ -1,22 +1,21 @@
 <template>
 	<div class="wheather-item">
-		<div class="wheather-item__name">{{ weatherDetail.name }}, {{ weatherDetail.sys.country }}</div>
+		<div class="wheather-item__name">{{ weatherItemData.name }}, {{ weatherItemData.sys.country }}</div>
 		<div class="wheather-details">
 			<div class="wheather-details__left-wrapp">
 				<div class="wheather-details__desc-temp-wrapp">
 					<p class="wheather-details__description">
 						{{ getWeatherDesc }}
 					</p>
-					<p class="wheather-details__temp">{{ getWeatherCurTemp }} °</p>
+					<p class="wheather-details__temp">{{ getWeatherCurTemp }}°</p>
 				</div>
 				<div class="wheather-details__icon">
-					<img :src="getWeatherIcon" alt="Weather icon" />
+					<img :src="weatherIcon" alt="Weather icon" />
 				</div>
 			</div>
 			<div class="wheather-details__right-wrapp">
 				<p class="wheather-details__min-temp"><span>Min:</span> {{ getWeatherMinTemp }} °C</p>
 				<p class="wheather-details__max-temp"><span>Max:</span> {{ getWeatherMaxTemp }} °C</p>
-				<!-- <p class="wheather-details__max-temp">HOURS : {{ getWeatherHours }}</p> -->
 			</div>
 		</div>
 		<div class="wheather-details-footer">
@@ -33,23 +32,33 @@
 				<p>{{ getWeatherPressure }} mb</p>
 			</div>
 		</div>
-		<button @click="addCard">add card</button>
+		<v-button class="wheather-item__btn" v-if="isBtnVisible" :btnTitle="'Delete'" @click="deletePlace" />
 	</div>
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import windIcon from '../assets/images/wind.png';
 import humidityIcon from '../assets/images/humidity.png';
 import pressureIcon from '../assets/images/pressure.png';
+import vButton from './v-button.vue';
 export default {
+	components: { vButton },
 	name: 'v-wheather-item',
 	props: {
-		wheather_item_data: {
+		weatherItemData: {
 			type: Object,
 			default() {
 				return {};
 			}
+		},
+		isBtnVisible: {
+			type: Boolean,
+			default: false
+		},
+		isActiveCard: {
+			type: String,
+			default: ''
 		}
 	},
 	data: () => ({
@@ -57,40 +66,40 @@ export default {
 		humidityIcon,
 		pressureIcon
 	}),
-	mounted() {},
 	computed: {
-		...mapState(['weatherDetail']),
-		getWeatherIcon() {
-			return this.weatherDetail.weather[0].icon;
-		},
+		...mapGetters(['weatherIcon']),
+
 		getWeatherDesc() {
-			return this.weatherDetail.weather[0].description;
+			return this.weatherItemData.weather[0].description;
 		},
 		getWeatherCurTemp() {
-			return Math.trunc(this.weatherDetail.main.temp);
+			return Math.trunc(this.weatherItemData.main.temp);
 		},
 		getWeatherMinTemp() {
-			return Math.trunc(this.weatherDetail.main.temp_min);
+			return Math.trunc(this.weatherItemData.main.temp_min);
 		},
 		getWeatherMaxTemp() {
-			return Math.trunc(this.weatherDetail.main.temp_max);
+			return Math.trunc(this.weatherItemData.main.temp_max);
 		},
 		getWeatherSpeed() {
-			return this.weatherDetail.wind.speed;
+			return this.weatherItemData.wind.speed;
 		},
 		getWeatherHumidity() {
-			return this.weatherDetail.main.humidity;
+			return this.weatherItemData.main.humidity;
 		},
 		getWeatherPressure() {
-			return this.weatherDetail.main.pressure;
+			return this.weatherItemData.main.pressure;
 		}
 	},
 	methods: {
-		...mapMutations(['UPDATE_WEATHER', 'ADD_NEW_DATA']),
+		...mapMutations(['UPDATE_WEATHER', 'ADD_NEW_DATA', 'CHANGE_LOADING', 'DELETE_PLACE']),
 		...mapActions(['getWeatherByLatLon']),
 		addCard() {
 			console.log(1);
-			this.ADD_NEW_DATA(this.weatherDetail);
+			this.ADD_NEW_DATA(this.weatherItemData);
+		},
+		deletePlace() {
+			this.DELETE_PLACE(this.weatherItemData.id);
 		}
 	}
 };
@@ -98,17 +107,17 @@ export default {
 
 <style lang="scss" scoped>
 .wheather-item {
+	width: 90%;
+	height: 270px;
+	position: relative;
+	margin: 40px auto;
+	padding: 10px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-evenly;
-	margin: 20px auto;
-	width: 90%;
-	height: 300px;
-	position: relative;
 	background-color: #496583;
-	margin-bottom: 20px;
-	padding: 10px;
 	border-radius: 20px;
+	box-shadow: 2px 2px 10px #2c3d4e;
 	&__name {
 		font: 700 30px/30px 'Fira Sans', sans-serif;
 		color: #fff;
@@ -176,6 +185,18 @@ export default {
 				color: #fff;
 			}
 		}
+	}
+	&__btn {
+		padding: 8px 16px;
+		max-width: 90px;
+		position: absolute;
+		top: 255px;
+		left: 242px;
+		background-color: #102776;
+		box-shadow: 0 0 2px #102776;
+	}
+	&:last-of-type {
+		margin-bottom: 50px;
 	}
 }
 .icon {
