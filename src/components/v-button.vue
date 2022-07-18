@@ -74,6 +74,7 @@ export default {
 		background-color: #cccccc;
 		color: #666666;
 		cursor: not-allowed;
+		pointer-events: none;
 	}
 	&__icon {
 		margin: 0 8px;
