@@ -1,5 +1,5 @@
 <template>
-	<div class="wheather-item">
+	<div class="wheather-item" :class="className">
 		<div class="wheather-item__name">{{ weatherItemData.name }}, {{ weatherItemData.sys.country }}</div>
 		<div class="wheather-details">
 			<div class="wheather-details__left-wrapp">
@@ -10,7 +10,7 @@
 					<p class="wheather-details__temp">{{ getWeatherCurTemp }}°</p>
 				</div>
 				<div class="wheather-details__icon">
-					<img :src="weatherIcon" alt="Weather icon" />
+					<img :src="ICON" alt="Weather icon" />
 				</div>
 			</div>
 			<div class="wheather-details__right-wrapp">
@@ -57,8 +57,8 @@ export default {
 			default: false
 		},
 		isActiveCard: {
-			type: String,
-			default: ''
+			type: Boolean,
+			default: false
 		}
 	},
 	data: () => ({
@@ -68,6 +68,9 @@ export default {
 	}),
 	computed: {
 		...mapGetters(['weatherIcon']),
+		ICON() {
+			return this.weatherItemData.weather[0].icon;
+		},
 
 		getWeatherDesc() {
 			return this.weatherItemData.weather[0].description;
@@ -89,6 +92,9 @@ export default {
 		},
 		getWeatherPressure() {
 			return this.weatherItemData.main.pressure;
+		},
+		className() {
+			return { 'active-card-bg': this.isActiveCard };
 		}
 	},
 	methods: {
@@ -118,17 +124,34 @@ export default {
 	background-color: #496583;
 	border-radius: 20px;
 	box-shadow: 2px 2px 10px #2c3d4e;
+	background: url('../assets/images/wethaer-bg.jpeg') top center;
+	background-size: cover;
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.55);
+		border-radius: 20px;
+	}
 	&__name {
 		font: 700 30px/30px 'Fira Sans', sans-serif;
 		color: #fff;
 		text-shadow: 4px 2px 2px #000;
 		text-align: center;
 		font-style: italic;
+		z-index: 10;
 	}
 	.wheather-details {
 		display: flex;
 		justify-content: space-between;
 		width: 100%;
+		background-color: rgba(255, 255, 255, 0.2);
+		border-radius: 20px;
+		padding: 10px;
+		z-index: 10;
 		&__left-wrapp,
 		&__right-wrapp {
 			display: flex;
@@ -174,15 +197,20 @@ export default {
 	.wheather-details-footer {
 		display: flex;
 		justify-content: space-evenly;
+		align-items: center;
+		background-color: rgba(255, 255, 255, 0.2);
+		border-radius: 20px;
+		z-index: 10;
 		&__wind-wrapp,
 		&__humidity-wrapp,
 		&__pressure-wrapp {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+			padding: 10px 0;
 			p {
-				padding: 10px;
 				color: #fff;
+				padding-top: 10px;
 			}
 		}
 	}
@@ -190,10 +218,10 @@ export default {
 		padding: 8px 16px;
 		max-width: 90px;
 		position: absolute;
-		top: 255px;
-		left: 242px;
-		background-color: #102776;
-		box-shadow: 0 0 2px #102776;
+		top: 256px;
+		right: 30px;
+		background: linear-gradient(360deg, #8b1919, #f45235);
+		box-shadow: 0 0 1px #f45235;
 	}
 	&:last-of-type {
 		margin-bottom: 50px;
@@ -202,5 +230,22 @@ export default {
 .icon {
 	width: 30px;
 	height: 30px;
+}
+.active-card-bg {
+	background-color: red;
+	background: url('../assets/images/wethaer-bg2.jpeg') center center cover no-repeat fixed;
+	background: url('../assets/images/wethaer-bg2.jpeg') top center;
+	background-size: cover;
+}
+.active-card-bg::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(255, 255, 255, 0.2);
+	border-radius: 20px;
+	z-index: 0;
 }
 </style>
