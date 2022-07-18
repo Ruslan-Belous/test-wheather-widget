@@ -37,9 +37,10 @@ export default {
 	},
 	methods: {
 		...mapActions(['getWeatherByLatLon']),
-		...mapMutations(['UPDATE_WEATHER', 'SET_LATITUDE', 'SET_LONGITUDE', 'CHANGE_LOADING_ADD_PLACE']),
+		...mapMutations(['UPDATE_WEATHER', 'SET_LATITUDE', 'SET_LONGITUDE', 'CHANGE_LOADING_ADD_PLACE', 'SET_ERROR']),
 		async getWheather() {
 			if (this.coords.lat && this.coords) {
+				this.SET_ERROR('');
 				this.CHANGE_LOADING_ADD_PLACE(true);
 				await this.getWeatherByLatLon(this.coords);
 				this.CHANGE_LOADING_ADD_PLACE(false);
