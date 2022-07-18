@@ -12,8 +12,9 @@ export default new Vuex.Store({
         loadingAddPlace: false,
         weatherDetail: {},
         places: [],
+        error: ''
     },
-    plugins: [createPersistedState()],
+    // plugins: [createPersistedState()],
     mutations: {
         UPDATE_WEATHER_DETAIL: (state, weatherDetail) => state.weatherDetail = weatherDetail,
         CHANGE_LOADING_CUR_PLACE: (state, value) => state.loadingCurPlace = value,
@@ -22,9 +23,10 @@ export default new Vuex.Store({
             if (!state.places.some(el => el.id === place.id)
                 && place.id !== state.weatherDetail.id
             )
-                state.places.push(place)
+                state.places.unshift(place)
         },
-        DELETE_PLACE: (state, id) => state.places = state.places.filter(el => el.id !== id)
+        DELETE_PLACE: (state, id) => state.places = state.places.filter(el => el.id !== id),
+        SET_ERROR: (state, error) => state.error = error
     },
     actions: {
         async getWeatherByLatLon({ state, commit }, coords) {
@@ -33,6 +35,9 @@ export default new Vuex.Store({
                 .catch(err => {
                     console.log(err)
                 })
+            if (response.data?.error) {
+                commit('SET_ERROR', response.data.error)
+            }
             if (Object.keys(state.weatherDetail).length) {
                 commit('ADD_PLACE', response.data)
             }
@@ -40,23 +45,9 @@ export default new Vuex.Store({
             console.log(response.data);
 
         },
-        // async getCurrentLocation({ dispatch }) {
-        //     const success = async (position) => {
-        //         const coords = {
-        //             lat: position.coords.latitude,
-        //             lon: position.coords.longitude
-        //         };
-        //         await dispatch('getWeatherByLatLon', coords)
-        //     };
-        //     const error = (err) => {
-        //         console.log(error);
-        //     };
-        //     navigator.geolocation.getCurrentPosition(success, error);
-        // },
-
     },
     getters: {
-        weatherIcon: (state) => state.weatherDetail.weather[0].icon
+        // weatherIcon: (state) => state.weatherDetail.weather[0].icon
 
     },
     modules: {}
