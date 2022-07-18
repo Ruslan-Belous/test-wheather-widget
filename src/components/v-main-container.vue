@@ -2,13 +2,18 @@
 	<main class="main-container container">
 		<v-loader class="loader" v-if="loadingCurPlace" />
 		<div v-else>
-			<v-weather-item :weatherItemData="weatherDetail" />
+			<v-weather-item :weatherItemData="weatherDetail" :isActiveCard="true" />
 			<v-search-form />
-
+			<p class="error">{{ error }}</p>
 			<v-weather-item v-for="place in paginatedPlaces" :key="place.id" :weatherItemData="place" :isBtnVisible="true" />
-			<!-- <v-pagination :arrData="places" /> -->
 			<div class="pagination" v-if="isPaginationPageVisible">
-				<div class="page" v-for="(page, i) in pages" :key="i" @click="pageClick(page)">
+				<div
+					class="pagination__page"
+					v-for="(page, i) in pages"
+					:key="i"
+					@click="pageClick(page)"
+					:class="{ 'pagination__active-page': page === pageNum }"
+				>
 					{{ page }}
 				</div>
 			</div>
@@ -22,15 +27,15 @@ import { mapActions, mapState } from 'vuex';
 import VLoader from './v-loader.vue';
 import VSearchForm from './v-search-form.vue';
 import VWeatherItem from './v-weather-item.vue';
-import Vpagination from './v-pagination.vue';
 import VScrollUp from './v-scroll-up.vue';
+import VPagination from './v-pagination.vue';
 
 export default {
-	components: { VSearchForm, VWeatherItem, VLoader, Vpagination, VScrollUp },
+	components: { VSearchForm, VWeatherItem, VLoader, VScrollUp, VPagination },
 	name: 'v-main-container',
 	data: () => ({
 		loadingCurPlace: true,
-		placePerPage: 5,
+		placesPerPage: 5,
 		pageNum: 1
 	}),
 	async mounted() {
@@ -48,20 +53,17 @@ export default {
 		navigator.geolocation.getCurrentPosition(success, error);
 	},
 	computed: {
-		...mapState(['places', 'weatherDetail']),
+		...mapState(['places', 'weatherDetail', 'error']),
 		pages() {
-			console.log(this.places);
 			return Math.ceil(this.places.length / 5);
 		},
 		isPaginationPageVisible() {
 			return this.places.length > 5;
 		},
 		paginatedPlaces() {
-			let from = (this.pageNum - 1) * this.placePerPage;
-			let to = from + this.placePerPage;
-			let a = this.places.slice(from, to);
-			console.log(a);
-			return a;
+			let from = (this.pageNum - 1) * this.placesPerPage;
+			let to = from + this.placesPerPage;
+			return this.places.slice(from, to);
 		}
 	},
 	methods: {
@@ -76,8 +78,6 @@ export default {
 <style lang="scss" scoped>
 .main-container {
 	flex: 1 1 auto;
-	// display: flex;
-	// align-items: center;
 }
 .loader {
 	position: absolute;
@@ -85,22 +85,31 @@ export default {
 	top: 50%;
 	transform: translate(-50%, -50%);
 }
+.error {
+	text-align: center;
+	color: tomato;
+	font-size: 18px;
+	padding: 10px;
+}
 .pagination {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
 	margin: 20px 0;
-}
-.page {
-	padding: 6px 10px;
-	margin-right: 10px;
-	border: 1px solid #eee;
-	color: #fff;
-	border-radius: 8px;
-	transition: 0.3s;
-	cursor: pointer;
-}
-.page:hover {
-	background-color: #102776;
+	&__page {
+		padding: 6px 10px;
+		margin-right: 10px;
+		border: 1px solid #eee;
+		color: #fff;
+		border-radius: 50%;
+		transition: 0.3s;
+		cursor: pointer;
+	}
+	&__page:hover {
+		background-color: #466efa;
+	}
+	&__active-page {
+		background-color: #102776;
+	}
 }
 </style>
