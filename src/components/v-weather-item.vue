@@ -103,22 +103,13 @@ export default {
 					'Westerly',
 					'North Westerly'
 				];
-
-				d += 22.5;
-
 				if (d < 0) d = 360 - (Math.abs(d) % 360);
 				else d = d % 360;
-
 				let w = parseInt(d / 45);
 				return `${directions[w]}`;
 			}
-
 			let windDeg = this.weatherItemData.wind.deg;
-
-			windDeg = findWindDirection(windDeg);
-
-			console.log(windDeg);
-			return windDeg;
+			return findWindDirection(windDeg);
 		},
 		weatherHumidity() {
 			return this.weatherItemData.main.humidity;
@@ -255,6 +246,7 @@ export default {
 		right: 30px;
 		background: linear-gradient(360deg, #8b1919, #f45235);
 		box-shadow: 0 0 1px #f45235;
+		z-index: 10;
 	}
 	&:last-of-type {
 		margin-bottom: 50px;

@@ -44,7 +44,7 @@ export default new Vuex.Store({
                 commit('ADD_PLACE', response.data)
             }
             else commit('UPDATE_WEATHER_DETAIL', response.data)
-            console.log(response.data)
+
         },
     },
     getters: {},
