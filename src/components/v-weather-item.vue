@@ -178,6 +178,7 @@ export default {
 		&__icon {
 			img {
 				width: 90px;
+				// height: 90px;
 			}
 		}
 		&__description {
