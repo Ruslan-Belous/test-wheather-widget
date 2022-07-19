@@ -22,6 +22,7 @@
 			<div class="wheather-details-footer__wind-wrapp">
 				<img class="icon" :src="windIcon" alt="Wind icon" />
 				<p>{{ weatherSpeed }} km/h</p>
+				<p>{{ weatherWindDirection }}</p>
 			</div>
 			<div class="wheather-details-footer__humidity-wrapp">
 				<img class="icon" :src="humidityIcon" alt="Wind icon" />
@@ -90,6 +91,35 @@ export default {
 		weatherSpeed() {
 			return this.weatherItemData.wind.speed;
 		},
+		weatherWindDirection() {
+			function findWindDirection(d) {
+				let directions = [
+					'Northerly',
+					'North Easterly',
+					'Easterly',
+					'South Easterly',
+					'Southerly',
+					'South Westerly',
+					'Westerly',
+					'North Westerly'
+				];
+
+				d += 22.5;
+
+				if (d < 0) d = 360 - (Math.abs(d) % 360);
+				else d = d % 360;
+
+				let w = parseInt(d / 45);
+				return `${directions[w]}`;
+			}
+
+			let windDeg = this.weatherItemData.wind.deg;
+
+			windDeg = findWindDirection(windDeg);
+
+			console.log(windDeg);
+			return windDeg;
+		},
 		weatherHumidity() {
 			return this.weatherItemData.main.humidity;
 		},
@@ -152,7 +182,7 @@ export default {
 		justify-content: space-between;
 		width: 100%;
 		background-color: rgba(255, 255, 255, 0.2);
-		border-radius: 20px;
+		border-radius: 20px 20px 0 0;
 		padding: 10px;
 		z-index: 10;
 		&__left-wrapp,
@@ -202,7 +232,7 @@ export default {
 		justify-content: space-evenly;
 		align-items: center;
 		background-color: rgba(255, 255, 255, 0.2);
-		border-radius: 20px;
+		border-radius: 0 0 20px 20px;
 		z-index: 10;
 		&__wind-wrapp,
 		&__humidity-wrapp,
@@ -236,7 +266,7 @@ export default {
 }
 .active-card-bg {
 	// background-color: red;
-	background: url('../assets/images/wethaer-bg1.jpeg') top center;
+	background: url('../assets/images/wethaer-bg1.jpeg') center;
 	background-size: cover;
 }
 .active-card-bg::before {
