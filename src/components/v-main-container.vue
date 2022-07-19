@@ -43,6 +43,8 @@ export default {
 			const coords = {
 				lat: position.coords.latitude,
 				lon: position.coords.longitude
+				// 	lat: 49.2064,
+				// lon: 28.3775
 			};
 			await this.getWeatherByLatLon(coords);
 			this.loadingCurPlace = false;
@@ -106,7 +108,7 @@ export default {
 		cursor: pointer;
 	}
 	&__page:hover {
-		background-color: #466efa;
+		background-color: #102776;
 	}
 	&__active-page {
 		background-color: #102776;

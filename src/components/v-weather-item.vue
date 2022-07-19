@@ -5,31 +5,31 @@
 			<div class="wheather-details__left-wrapp">
 				<div class="wheather-details__desc-temp-wrapp">
 					<p class="wheather-details__description">
-						{{ getWeatherDesc }}
+						{{ weatherDesc }}
 					</p>
-					<p class="wheather-details__temp">{{ getWeatherCurTemp }}°</p>
+					<p class="wheather-details__temp">{{ weatherCurTemp }}°</p>
 				</div>
 				<div class="wheather-details__icon">
-					<img :src="ICON" alt="Weather icon" />
+					<img :src="weatherIcon" alt="Weather icon" v-if="isIconVisible" />
 				</div>
 			</div>
 			<div class="wheather-details__right-wrapp">
-				<p class="wheather-details__min-temp"><span>Min:</span> {{ getWeatherMinTemp }} °C</p>
-				<p class="wheather-details__max-temp"><span>Max:</span> {{ getWeatherMaxTemp }} °C</p>
+				<p class="wheather-details__min-temp"><span>Min:</span> {{ weatherMinTemp }} °C</p>
+				<p class="wheather-details__max-temp"><span>Max:</span> {{ weatherMaxTemp }} °C</p>
 			</div>
 		</div>
 		<div class="wheather-details-footer">
 			<div class="wheather-details-footer__wind-wrapp">
 				<img class="icon" :src="windIcon" alt="Wind icon" />
-				<p>{{ getWeatherSpeed }} km/h</p>
+				<p>{{ weatherSpeed }} km/h</p>
 			</div>
 			<div class="wheather-details-footer__humidity-wrapp">
 				<img class="icon" :src="humidityIcon" alt="Wind icon" />
-				<p>{{ getWeatherHumidity }} %</p>
+				<p>{{ weatherHumidity }} %</p>
 			</div>
 			<div class="wheather-details-footer__pressure-wrapp">
 				<img class="icon" :src="pressureIcon" alt="Wind icon" />
-				<p>{{ getWeatherPressure }} mb</p>
+				<p>{{ weatherPressure }} mb</p>
 			</div>
 		</div>
 		<v-button class="wheather-item__btn" v-if="isBtnVisible" :btnTitle="'Delete'" @click="deletePlace" />
@@ -68,29 +68,32 @@ export default {
 	}),
 	computed: {
 		...mapGetters(['weatherIcon']),
-		ICON() {
+		isIconVisible() {
+			const weatherEl = this.weatherItemData;
+			return weatherEl.id === 1851632 && !weatherEl.weather[0].icon ? false : true;
+		},
+		weatherIcon() {
 			return this.weatherItemData.weather[0].icon;
 		},
-
-		getWeatherDesc() {
+		weatherDesc() {
 			return this.weatherItemData.weather[0].description;
 		},
-		getWeatherCurTemp() {
+		weatherCurTemp() {
 			return Math.trunc(this.weatherItemData.main.temp);
 		},
-		getWeatherMinTemp() {
+		weatherMinTemp() {
 			return Math.trunc(this.weatherItemData.main.temp_min);
 		},
-		getWeatherMaxTemp() {
+		weatherMaxTemp() {
 			return Math.trunc(this.weatherItemData.main.temp_max);
 		},
-		getWeatherSpeed() {
+		weatherSpeed() {
 			return this.weatherItemData.wind.speed;
 		},
-		getWeatherHumidity() {
+		weatherHumidity() {
 			return this.weatherItemData.main.humidity;
 		},
-		getWeatherPressure() {
+		weatherPressure() {
 			return this.weatherItemData.main.pressure;
 		},
 		className() {
@@ -121,10 +124,10 @@ export default {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-evenly;
-	background-color: #496583;
+	// background-color: #496583;
 	border-radius: 20px;
 	box-shadow: 2px 2px 10px #2c3d4e;
-	background: url('../assets/images/wethaer-bg.jpeg') top center;
+	background: url('../assets/images/wethaer-bg2.jpeg') center;
 	background-size: cover;
 	&::before {
 		content: '';
@@ -133,7 +136,7 @@ export default {
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.55);
+		background-color: rgba(0, 0, 0, 0.15);
 		border-radius: 20px;
 	}
 	&__name {
@@ -232,9 +235,8 @@ export default {
 	height: 30px;
 }
 .active-card-bg {
-	background-color: red;
-	background: url('../assets/images/wethaer-bg2.jpeg') center center cover no-repeat fixed;
-	background: url('../assets/images/wethaer-bg2.jpeg') top center;
+	// background-color: red;
+	background: url('../assets/images/wethaer-bg1.jpeg') top center;
 	background-size: cover;
 }
 .active-card-bg::before {
