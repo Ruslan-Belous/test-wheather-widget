@@ -11,10 +11,7 @@ export default {
 	components: { vWeatherItem },
 	name: 'v-weather-cards',
 	computed: {
-		...mapState(['places']),
-		card() {
-			console.log(this.places);
-		}
+		...mapState(['places'])
 	}
 };
 </script>

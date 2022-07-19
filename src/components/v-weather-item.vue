@@ -125,7 +125,6 @@ export default {
 		...mapMutations(['UPDATE_WEATHER', 'ADD_NEW_DATA', 'CHANGE_LOADING', 'DELETE_PLACE']),
 		...mapActions(['getWeatherByLatLon']),
 		addCard() {
-			console.log(1);
 			this.ADD_NEW_DATA(this.weatherItemData);
 		},
 		deletePlace() {
