@@ -10,7 +10,7 @@
 					<p class="wheather-details__temp">{{ weatherCurTemp }}°</p>
 				</div>
 				<div class="wheather-details__icon">
-					<img :src="weatherIcon" alt="Weather icon" v-if="isIconVisible" />
+					<img :src="weatherIcon" v-if="isIconVisible" />
 				</div>
 			</div>
 			<div class="wheather-details__right-wrapp">
@@ -178,7 +178,6 @@ export default {
 		&__icon {
 			img {
 				width: 90px;
-				height: 90px;
 			}
 		}
 		&__description {
@@ -218,7 +217,7 @@ export default {
 		}
 	}
 	&__btn {
-		padding: 8px 16px;
+		padding: 5px 10px;
 		max-width: 90px;
 		position: absolute;
 		top: 256px;
